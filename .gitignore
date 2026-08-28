@@ -1,0 +1,14 @@
+# Environment / sensitive config
+.env
+
+# XAMPP / temporary files
+*.log
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/

@@ -1,36 +1,59 @@
 <?php
-$message="";
-if($_SERVER["REQUEST_METHOD"]==="POST"){
-    $taskName = trim($_POST["taskName"]);//use var_dump=$taskName and check the difference
+
+require_once "includes/db.php";
+
+$message = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $taskName = trim($_POST["taskName"]);
     $priority = $_POST["priority"];
 
-    if(empty($taskName)){
-        $message="please enter a task name";
+    if (empty($taskName)) {
+        $message = "Please enter a task name.";
+    } else {
+
+        $userId = 1;
+        $status = "Pending";
+
+        $sql = "INSERT INTO tasks (user_id, title, priority, status)
+                VALUES (?, ?, ?, ?)";
+
+        $stmt = $conn->prepare($sql);
+
+        $stmt->bind_param(
+            "isss",
+            $userId,
+            $taskName,
+            $priority,
+            $status
+        );
+
+        if ($stmt->execute()) {
+            $message = "Task added successfully!";
+        } else {
+            $message = "Something went wrong.";
+        }
     }
-    else{
-        $message="Task added:" .$taskName . "| Priority: " .$priority;
-  }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Task</title>
-</head>
-<body>
-    <h2>Add Task</h2>
-    <?php echo $message; ?>
-    <form method="POST">
+
+<?php include "includes/header.php"; ?>
+
+<h2>Add Task</h2>
+
+<p><?php echo $message; ?></p>
+
+<form method="POST">
+
     <label>Task Name:</label>
-    <input type="text" name="taskName"><!--after submitting it becomes $_POST["taskName"]-->
+    <input type="text" name="taskName">
 
     <br><br>
 
     <label>Priority:</label>
 
-    <select name="priority"><!--after submitting it becomes $_POST["priority"]-->
+    <select name="priority">
         <option value="High">High</option>
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
@@ -41,5 +64,5 @@ if($_SERVER["REQUEST_METHOD"]==="POST"){
     <button type="submit">ADD TASK</button>
 
 </form>
-</body>
-</html>
+
+<?php include "includes/footer.php"; ?>

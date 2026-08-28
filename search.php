@@ -1,6 +1,6 @@
 <?php 
 $message="";
-if(isset($_GET["search"])){//isset check if something exists and not null
+if(isset($_GET["search"])){//isset check "Search" something exists and not null
     $search = trim($_GET["search"]);
     if(empty($search)){
     $message="Please enter something to search.";
@@ -10,13 +10,7 @@ if(isset($_GET["search"])){//isset check if something exists and not null
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Search Tasks</title>
-</head>
-<body>
+<?php include "includes/header.php"; ?>
 
     <h2>Search Tasks</h2>
 
@@ -31,5 +25,4 @@ if(isset($_GET["search"])){//isset check if something exists and not null
 
     </form>
 
-</body>
-</html>
+<?php include "includes/footer.php"; ?>
