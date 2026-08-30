@@ -8,25 +8,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $taskName = trim($_POST["taskName"]);
     $priority = $_POST["priority"];
+    $deadline = $_POST["deadline"];
 
     if (empty($taskName)) {
+
         $message = "Please enter a task name.";
+
+    } elseif (empty($deadline)) {
+
+        $message = "Please select a deadline.";
+
     } else {
 
         $userId = 1;
         $status = "Pending";
 
-        $sql = "INSERT INTO tasks (user_id, title, priority, status)
-                VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO tasks 
+                (user_id, title, priority, status, deadline)
+                VALUES (?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
 
         $stmt->bind_param(
-            "isss",
+            "issss",
             $userId,
             $taskName,
             $priority,
-            $status
+            $status,
+            $deadline
         );
 
         if ($stmt->execute()) {
@@ -36,33 +45,45 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 }
+
 ?>
 
 <?php include "includes/header.php"; ?>
 
-<h2>Add Task</h2>
+<main>
 
-<p><?php echo $message; ?></p>
+    <h2>Add Task</h2>
 
-<form method="POST">
+    <?php if (!empty($message)) { ?>
+        <p><?php echo $message; ?></p>
+    <?php } ?>
 
-    <label>Task Name:</label>
-    <input type="text" name="taskName">
+    <form method="POST">
 
-    <br><br>
+        <label>Task Name:</label>
+        <input type="text" name="taskName">
 
-    <label>Priority:</label>
+        <br><br>
 
-    <select name="priority">
-        <option value="High">High</option>
-        <option value="Medium">Medium</option>
-        <option value="Low">Low</option>
-    </select>
+        <label>Priority:</label>
 
-    <br><br>
+        <select name="priority">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </select>
 
-    <button type="submit">ADD TASK</button>
+        <br><br>
 
-</form>
+        <label>Deadline:</label>
+        <input type="date" name="deadline">
+
+        <br><br>
+
+        <button type="submit">Add Task</button>
+
+    </form>
+
+</main>
 
 <?php include "includes/footer.php"; ?>
